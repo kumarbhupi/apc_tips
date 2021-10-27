@@ -32,6 +32,8 @@ x = x.astype('float64')
 
 y = data[:, 1]
 
+
+
 print("Dimensionalitat de la BBDD:", dataset.shape)
 print("Dimensionalitat de les entrades X", x.shape)
 print("Dimensionalitat de l'atribut Y", y.shape)
@@ -90,17 +92,28 @@ from sklearn.metrics import r2_score
 # En el vostre cas, haureu de triar un atribut com a y, i utilitzar la resta com a x.
 total_bill = x[:, 0].reshape(x.shape[0], 1)
 total_bill_stand = standarize(total_bill)
-day_stand = standarize(x[:, 4])
+day_stand = standarize(x[:, [3]].reshape(x.shape[0], 1))
+days = (x[:, [3]].reshape(x.shape[0], 1))
+day_sum = np.sum(np.unique(x[:, 3], return_counts=True)[1])
+day_avg = [x/day_sum for x in np.unique(x[:, 3], return_counts=True)[1]]
+for i in range(days.size):
+    days[i] = day_avg[int(days[i])]
+total_bill_days_stand = standarize(x[:, [1, 4]])
 
-regr = regression(total_bill_stand, y)
-predicted = regr.predict(total_bill_stand)
+#regr = regression((total_bill_stand*np.power(day_stand,2)), y) # Total bill * day_stand^2
+#regr = regression(total_bill_stand* np.power(days, 2), y) # Total bill * day_stand^2
+#regr = regression(total_bill_stand, y) # Total bill * day_stand
+#regr = regression(x[:, [1, 4]], y) # 2 variables total_bill y day
+regr = regression(total_bill_days_stand, y) # 2 variables total_bill y day estandarizada
+
+predicted = regr.predict(total_bill_days_stand)
 
 
 # Mostrem la predicció del model entrenat en color vermell a la Figura anterior 1
-plt.figure()
+"""plt.figure()
 ax = plt.scatter(total_bill_stand, y, s=8)
-plt.plot(total_bill_stand[:, 0], predicted, 'r')
-plt.show()
+plt.plot(total_bill_days_stand, predicted, 'r')
+plt.show()"""
 
 # Mostrem l'error (MSE i R2)
 MSE = mse(y, predicted)
@@ -137,7 +150,7 @@ ax = plt.scatter(total_bill_stand, y, s=10)
 plt.plot(total_bill_stand[:, 0], predicted, 'r')
 plt.show()"""
 
-"""for i in range(x_train.shape[1]):
+for i in range(x_train.shape[1]):
     x_t = x_train[:, i]  # seleccionem atribut i en conjunt de train
     x_v = x_val[:, i]  # seleccionem atribut i en conjunt de val.
     x_t = np.reshape(x_t, (x_t.shape[0], 1))
@@ -157,5 +170,8 @@ plt.show()"""
 
 
     print("Error en atribut %d: %f" % (i, error))
-    print("R2 score en atribut %d: %f" % (i, r2))"""
+    print("R2 score en atribut %d: %f" % (i, r2))
+
+
+
 
