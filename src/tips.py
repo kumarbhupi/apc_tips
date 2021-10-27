@@ -90,15 +90,17 @@ from sklearn.metrics import r2_score
 # En el vostre cas, haureu de triar un atribut com a y, i utilitzar la resta com a x.
 total_bill = x[:, 0].reshape(x.shape[0], 1)
 total_bill_stand = standarize(total_bill)
+day_stand = standarize(x[:, 4])
 
 regr = regression(total_bill_stand, y)
 predicted = regr.predict(total_bill_stand)
 
+
 # Mostrem la predicció del model entrenat en color vermell a la Figura anterior 1
-"""plt.figure()
-ax = plt.scatter(total_bill_stand, y, s=10)
+plt.figure()
+ax = plt.scatter(total_bill_stand, y, s=8)
 plt.plot(total_bill_stand[:, 0], predicted, 'r')
-plt.show()"""
+plt.show()
 
 # Mostrem l'error (MSE i R2)
 MSE = mse(y, predicted)
@@ -134,7 +136,8 @@ x_train, y_train, x_val, y_val = split_data(x, y)
 ax = plt.scatter(total_bill_stand, y, s=10)
 plt.plot(total_bill_stand[:, 0], predicted, 'r')
 plt.show()"""
-for i in range(x_train.shape[1]):
+
+"""for i in range(x_train.shape[1]):
     x_t = x_train[:, i]  # seleccionem atribut i en conjunt de train
     x_v = x_val[:, i]  # seleccionem atribut i en conjunt de val.
     x_t = np.reshape(x_t, (x_t.shape[0], 1))
@@ -154,5 +157,5 @@ for i in range(x_train.shape[1]):
 
 
     print("Error en atribut %d: %f" % (i, error))
-    print("R2 score en atribut %d: %f" % (i, r2))
+    print("R2 score en atribut %d: %f" % (i, r2))"""
 
